@@ -272,10 +272,13 @@
             },
             body: JSON.stringify({ session_key: sessionKey }),
           })
-            .then((response) => response.json())
-            .then((data) => {
-              showToast(data);
+            .then((response) => {
+              showToast(response.status);
+              return response.json();
             })
+            // .then((data) => {
+            //   showToast({data});
+            // })
             .catch((error) => {
               console.error("Error:", error);
               showToast(error, false);
@@ -288,14 +291,16 @@
         const licenseValue = document.getElementById("license").value;
 
         fetch(`${API_CHECK_LICENSE}?lk=${licenseValue}`)
-          .then((response) => response.json())
+          .then((response) => {
+            showToast(response.status);
+            return response.json();
+          })
           .then((data) => {
             if (data.access_token) {
               localStorage.setItem("token", data.access_token);
             }
             document.getElementById("license-result").innerText = "OK";
-            // JSON.stringify(data);
-            showToast(data);
+            // showToast(data);
           })
           .catch((error) => {
             document.getElementById("license-result").innerText = "Error";
@@ -318,11 +323,14 @@
             },
             body: JSON.stringify({ cardId }),
           })
-            .then((response) => response.json())
-            .then((data) => {
-              showToast(data);
-              // showToast(`Session for build ${cardId} created successfully!`);
+            .then((response) => {
+              showToast(response.status);
+              return response.json();
             })
+            // .then((data) => {
+              // showToast(data);
+              // showToast(`Session for build ${cardId} created successfully!`);
+            // })
             .catch((error) => {
               console.error("Error:", error);
               showToast(error, false);
@@ -339,9 +347,12 @@
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         })
-          .then((response) => response.json())
+          .then((response) => {
+            showToast(response.status);
+            return response.json();
+          })
           .then((d) => {
-            showToast(d);
+            // showToast(d);
             openModal(d.data.session_key);
           })
           .catch((error) => {
@@ -359,10 +370,13 @@
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         })
-          .then((response) => response.json())
-          .then((d) => {
-            showToast(d);
+          .then((response) => {
+            showToast(response.status);
+            return response.json();
           })
+          // .then((d) => {
+          //   showToast(d);
+          // })
           .catch((error) => {
             console.error("Error:", error);
             showToast(error, false);
