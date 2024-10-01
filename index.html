@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test capsule</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .btn {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      .btn:hover {
+        background-color: #0056b3;
+      }
+
+      .input__container {
+        margin: 20px;
+        display: inline-flex;
+        gap: 20px;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .cards__container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+        margin-top: 60px;
+      }
+
+      .card {
+        border: 1px solid #ccc;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        width: 150px;
+        text-align: center;
+      }
+
+      .card img {
+        max-width: 100%;
+        border-radius: 8px;
+      }
+
+      .card button {
+        margin-top: 20px;
+        width: 100%;
+      }
+
+      .start__container {
+        margin-top: 60px;
+        width: 200px;
+      }
+
+      .start__container button {
+        width: 100%;
+        height: 100px;
+        background-color: #28a745;
+      }
+
+      .start__container button:hover {
+        background-color: #218838;
+      }
+
+      .end__container button {
+        margin-top: 20px;
+        width: 200px;
+        height: 50px;
+        background-color: #dc3545;
+      }
+
+      .end__container button:hover {
+        background-color: #c82333;
+      }
+
+      .toast__container {
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+      }
+
+      .toast {
+        padding: 10px 20px;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        color: white;
+      }
+
+      .toast.success {
+        background-color: green;
+      }
+
+      .toast.error {
+        background-color: red;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.5);
+      }
+
+      .modal__content {
+        background-color: #fefefe;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .modal__content .title {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .modal__content h2 {
+        margin-top: 0;
+      }
+
+      .modal__content span {
+        display: block;
+        font-size: 1.2em;
+        color: #333;
+      }
+
+      .modal__content .btn.close {
+        align-self: flex-end;
+        background-color: #dc3545;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="input__container">
+      <input id="license" type="text" placeholder="Введите лицензию" />
+      <button id="check-license" class="btn">Проверить</button>
+      <span
+        >Результат:
+        <span id="license-result">-</span>
+      </span>
+    </div>
+
+    <div class="cards__container">
+      <div class="card" data-card-id="1">
+        <img
+          src="https://placehold.co/150x200?text=Build 1"
+          alt="Placeholder Image" />
+        <button class="btn create-button">Create</button>
+      </div>
+      <div class="card" data-card-id="2">
+        <img
+          src="https://placehold.co/150x200?text=Build 2"
+          alt="Placeholder Image" />
+        <button class="btn create-button">Create</button>
+      </div>
+      <div class="card" data-card-id="3">
+        <img
+          src="https://placehold.co/150x200?text=Build 3"
+          alt="Placeholder Image" />
+        <button class="btn create-button">Create</button>
+      </div>
+      <div class="card" data-card-id="4">
+        <img
+          src="https://placehold.co/150x200?text=Build 4"
+          alt="Placeholder Image" />
+        <button class="btn create-button">Create</button>
+      </div>
+    </div>
+
+    <div class="start__container">
+      <button id="start" class="btn">Start</button>
+    </div>
+
+    <div class="end__container">
+      <button id="end" class="btn">End</button>
+    </div>
+
+    <div id="modal" class="modal">
+      <div class="modal__content">
+        <div class="title">
+          <h2>Modal title</h2>
+          <span id="session_key">Session Key: -</span>
+        </div>
+
+        <div class="cards__container">
+          <div class="card" data-card-id="1">
+            <img
+              src="https://placehold.co/300x300?text=TG+BOT"
+              alt="Placeholder Image" />
+            <button id="tgbot" class="btn">QR to tg bot</button>
+          </div>
+          <div class="card" data-card-id="2">
+            <img
+              src="https://placehold.co/300x300?text=Guest"
+              alt="Placeholder Image" />
+            <button id="guest" class="btn">Guest</button>
+          </div>
+        </div>
+
+        <button id="modal-close" class="btn close">Close</button>
+      </div>
+    </div>
+
+    <div class="toast__container">
+      <div id="toast" class="toast" style="display: none">Hello, world!</div>
+    </div>
+
+    <script>
+      // const API_URL = "https://capsule-api.immersionica.com"; // URL основной
+      const API_URL = "http://localhost:8080"; // URL local
+      const API_CHECK_LICENSE = API_URL + "/auth"; // URL проверки лицензии
+      const API_CREATE_BUILD = API_URL + "/sessions/new"; // URL выбора билда
+      const API_START = API_URL + "/sessions/ready"; // URL запуска
+      const API_TG_BOT = "https://t.me/eesticham_test_bot?start="; // URL отправки QR в телеграм бот
+      const API_GUEST = API_URL + "/sessions/guest"; // URL отправки QR гостю
+      const API_END = API_URL + "/sessions/end"; // URL отправки QR гостю
+
+      // Функция показа всплывающего сообщения
+      function showToast(message, isSuccess = true) {
+        const toast = document.getElementById("toast");
+        toast.innerText = message;
+        toast.className = isSuccess ? "toast success" : "toast error";
+        toast.style.display = "block";
+        setTimeout(() => {
+          toast.style.display = "none";
+        }, 5000);
+      }
+
+      // Функция открытия модального окна
+      function openModal(sessionKey) {
+        const modal = document.getElementById("modal");
+        document.getElementById(
+          "session_key",
+        ).innerText = `Session Key: ${sessionKey}`;
+        modal.style.display = "block";
+
+        document.getElementById("tgbot").addEventListener("click", () => {
+          window.open(API_TG_BOT + sessionKey, "_blank");
+        });
+
+        document.getElementById("guest").addEventListener("click", () => {
+          const token = localStorage.getItem("token");
+          fetch(API_GUEST, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ session_key: sessionKey }),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              showToast(data);
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              showToast(error, false);
+            });
+        });
+      }
+
+      // Проверка лицензии
+      document.getElementById("check-license").addEventListener("click", () => {
+        const licenseValue = document.getElementById("license").value;
+
+        fetch(`${API_CHECK_LICENSE}?lk=${licenseValue}`)
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.access_token) {
+              localStorage.setItem("token", data.access_token);
+            }
+            document.getElementById("license-result").innerText = "OK";
+            // JSON.stringify(data);
+            showToast(data);
+          })
+          .catch((error) => {
+            document.getElementById("license-result").innerText = "Error";
+            console.error("Error:", error);
+            showToast(error, false);
+          });
+      });
+
+      // Выбор билда
+      document.querySelectorAll(".create-button").forEach((button) => {
+        button.addEventListener("click", (event) => {
+          const cardId = event.target.closest(".card").dataset.cardId;
+          const token = localStorage.getItem("token");
+
+          fetch(API_CREATE_BUILD, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ cardId }),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              showToast(data);
+              // showToast(`Session for build ${cardId} created successfully!`);
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              showToast(error, false);
+            });
+        });
+      });
+
+      // Запуск сессии
+      document.getElementById("start").addEventListener("click", () => {
+        fetch(API_START, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+          .then((response) => response.json())
+          .then((d) => {
+            showToast(d);
+            openModal(d.data.session_key);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            showToast(error, false);
+          });
+      });
+
+      // Запуск сессии
+      document.getElementById("end").addEventListener("click", () => {
+        fetch(API_END, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+          .then((response) => response.json())
+          .then((d) => {
+            showToast(d);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            showToast(error, false);
+          });
+      });
+
+      // Закрытие модального окна
+      document.getElementById("modal-close").addEventListener("click", () => {
+        document.getElementById("modal").style.display = "none";
+      });
+
+      // Закрытие модального окна при клике вне его
+      window.onclick = function (event) {
+        const modal = document.getElementById("modal");
+        if (event.target == modal) {
+          modal.style.display = "none";
+        }
+      };
+    </script>
+  </body>
+</html>
